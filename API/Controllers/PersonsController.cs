@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using aspnetcoreapp.Models;
+using API.Models;
 using Microsoft.AspNetCore.Mvc;
-using aspnetcoreapp.DAL;
+using API.DAL;
 using System.Threading.Tasks;
 
-namespace aspnetcoreapp.Controllers
+namespace API.Controllers
 {
     [Route("api/[controller]/[action]")]
   public class PersonsController : Controller

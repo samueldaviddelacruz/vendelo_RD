@@ -1,4 +1,4 @@
-namespace aspnetcoreapp.Models
+namespace API.Models
 {
     public class Persona: DAL.MongoEntity
     {

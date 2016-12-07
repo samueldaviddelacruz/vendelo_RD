@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 
 
-namespace aspnetcoreapp.DAL{
+namespace API.DAL{
 
 public abstract class MongoEntity
 {

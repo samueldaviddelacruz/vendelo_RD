@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Hosting;
-namespace aspnetcoreapp
+namespace API
 {
     public class Program
     {

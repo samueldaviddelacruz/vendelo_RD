@@ -4,34 +4,31 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
-namespace aspnetcoreapp.DAL
+namespace API.DAL
 {
     public class MongoDAL<T> where T : MongoEntity
     {
         static string constring = "mongodb://localhost:27017";
+        
         static string dbname = "test_vendelo";
+       
         static MongoClient client;
+       
         static IMongoDatabase database;
+        
         static IMongoDatabase GetDB(){
             if(database==null){
                database = GetClient().GetDatabase(dbname);
             }
             return database;
         }
+
         static IMongoClient GetClient(){
             if(client==null){
                 client = new MongoClient(constring);
             }
             return client;
         }
-
-
-        public MongoDAL()
-        {
-           
-          //  BsonClassMap.RegisterClassMap<T>();
-        }
-
 
 
 
@@ -42,6 +39,7 @@ namespace aspnetcoreapp.DAL
 
             return await collection.ToListAsync();
         }
+
         public async Task Insert(T entity)
         {
             var collection = GetDB().GetCollection<T>(typeof(T).Name);
@@ -54,6 +52,7 @@ namespace aspnetcoreapp.DAL
             var result = await collection.Find(filter).FirstAsync();
             return result;
         }
+        
         public async Task<T> FindByObjectIDString(string id){
 
             return await FindByObjectID(ObjectId.Parse(id));
