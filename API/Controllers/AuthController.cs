@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 namespace API.Controllers
 {
     [Route("api/[controller]/[action]")]
-  public class AuthController : Controller
-  {
-    MongoDAL<Persona> mydal;
-   
-    [HttpPost]
-    public void LocalRegister()
+    public class AuthController : Controller
     {
-    
-    }
+        MongoDAL<Persona> mydal;
 
-    [HttpPost]
-    public void Login()
-    {
-    
-    }
+        [HttpPost]
+        public IActionResult LocalRegister([FromBody] Usuario newUsuario)
+        {
+            return Created("LocalLogin", new { newUsr = newUsuario });
+        }
 
-  }
+        [HttpGet]
+        public IActionResult LocalLogin()
+        {
+            return StatusCode(200);
+        }
+
+    }
 }
