@@ -1,33 +1,30 @@
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace API.DAL
 {
     public class MongoDAL<T> where T : MongoEntity
     {
-        static string constring = "mongodb://localhost:27017";
+        static readonly string constring = "mongodb://localhost:27017";
         
-        static string dbname = "test_vendelo";
+        static readonly string dbname = "test_vendelo";
+
+        private static MongoClient _client;
        
-        static MongoClient client;
-       
-        static IMongoDatabase database;
+        private static IMongoDatabase _database;
         
-        static IMongoDatabase GetDB(){
-            if(database==null){
-               database = GetClient().GetDatabase(dbname);
-            }
-            return database;
+        static IMongoDatabase GetDb()
+        {
+            return _database ?? (_database = GetClient().GetDatabase(dbname));
         }
 
-        static IMongoClient GetClient(){
-            if(client==null){
-                client = new MongoClient(constring);
-            }
-            return client;
+        static IMongoClient GetClient()
+        {
+            return _client ?? (_client = new MongoClient(constring));
         }
 
 
@@ -35,27 +32,34 @@ namespace API.DAL
         public async Task<List<T>> GetAll()
         {
         
-            var collection = GetDB().GetCollection<T>(typeof(T).Name).AsQueryable();
+            var collection = GetDb().GetCollection<T>(typeof(T).Name).AsQueryable();
 
             return await collection.ToListAsync();
         }
 
         public async Task Insert(T entity)
         {
-            var collection = GetDB().GetCollection<T>(typeof(T).Name);
+            var collection = GetDb().GetCollection<T>(typeof(T).Name);
             await collection.InsertOneAsync(entity);
         }
 
-        public async Task<T> FindByObjectID(ObjectId id){
-            var collection = GetDB().GetCollection<T>(typeof(T).Name);
+        public async Task<T> FindByObjectId(ObjectId id){
+            var collection = GetDb().GetCollection<T>(typeof(T).Name);
             var filter = Builders<T>.Filter.Eq("_id",id);
             var result = await collection.Find(filter).FirstAsync();
+
             return result;
         }
-        
-        public async Task<T> FindByObjectIDString(string id){
 
-            return await FindByObjectID(ObjectId.Parse(id));
+        public async Task<T> FindByExpression(Expression<Func<T, bool>> filter){
+            var collection = GetDb().GetCollection<T>(typeof(T).Name);
+            var result = await collection.Find(filter).FirstOrDefaultAsync();
+            return result;
+        }
+
+        public async Task<T> FindByObjectIdString(string id){
+
+            return await FindByObjectId(ObjectId.Parse(id));
 
         }
 

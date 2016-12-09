@@ -1,26 +1,53 @@
-using System.Collections.Generic;
+using System;
+using System.Threading.Tasks;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
+
+using API.Auth;
 using API.DAL;
-using System.Threading.Tasks;
 
 namespace API.Controllers
 {
     [Route("api/[controller]/[action]")]
     public class AuthController : Controller
     {
-        MongoDAL<Persona> mydal;
+
+        private JwtManager _jwtManager = new JwtManager();
+        private LocalAuth _localAuthManager = new LocalAuth();
 
         [HttpPost]
-        public IActionResult LocalRegister([FromBody] Usuario newUsuario)
+        public async Task<IActionResult> LocalRegister([FromBody] Usuario newUsuario)
         {
-            return Created("LocalLogin", new { newUsr = newUsuario });
+            try
+            {
+                await _localAuthManager.RegisterUser(newUsuario);
+                var token = _jwtManager.CreateJwt(newUsuario.email);
+                return StatusCode(200, new {newUser = newUsuario, jwt = token});
+            }
+            catch (Exception e)
+            {
+                return StatusCode(400, e.Message);
+            }
         }
 
-        [HttpGet]
-        public IActionResult LocalLogin()
+        [HttpPost]
+        public async Task<IActionResult> LocalLogin([FromBody] Usuario usuario)
         {
-            return StatusCode(200);
+            try
+            {
+                if (await _localAuthManager.IsValidUser(usuario.email, usuario.password))
+                {
+
+                    return StatusCode(200, new{jwt=_jwtManager.CreateJwt(usuario.email)});
+                }
+            }
+            catch (Exception e)
+            {
+
+                return StatusCode(400, new{error=e.Message});
+            }
+
+            return StatusCode(400, new{error="Invalid Username/password"});
         }
 
     }
