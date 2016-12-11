@@ -26,7 +26,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(400, e.Message);
+                return StatusCode(500, e.Message);
             }
         }
 
@@ -44,10 +44,10 @@ namespace API.Controllers
             catch (Exception e)
             {
 
-                return StatusCode(400, new{error=e.Message});
+                return StatusCode(401, new{error=e.Message});
             }
 
-            return StatusCode(400, new{error="Invalid Username/password"});
+            return StatusCode(401, new{error="Invalid Username/password"});
         }
 
     }

@@ -4,11 +4,17 @@ namespace API.Auth.AuthorizationHandlers
 {
     public class JwtRequired:IAuthorizationRequirement
     {
-        protected  JwtManager _jwtManager { get; set; }
+        protected  JwtManager JwtManager { get; set; }
 
         public JwtRequired(JwtManager jwtManager)
         {
-            _jwtManager = jwtManager;
+            JwtManager = jwtManager;
+        }
+
+        public bool IsValidJwt(string jwt)
+        {
+
+            return JwtManager.IsValidJwt(jwt);
         }
 
     }

@@ -14,17 +14,17 @@ namespace API.Controllers
       private MongoDAL<Persona> _mydal;
 
       [HttpGet]
-      [Authorize(Policy="JwtRequired")]
+      //[Authorize(Policy="JwtRequired")]
+      [Authorize]
       public async Task<IEnumerable<Persona>> GetAll()
     {
 
 
-     // var newPersona = new Persona(){nombre="Ada",apellido="de la cruz"};
       _mydal = new MongoDAL<Persona>();
-      //await  mydal.Insert(newPersona);
+
       var personas =  await _mydal.GetAll();
 
-      var searchedPerson = await _mydal.FindByObjectId(personas[0].Id);
+
       return personas;
     }
 
