@@ -45,7 +45,7 @@ namespace API
              // ValidAudience = "accelist.com",
 
               // Token will only be valid if not expired yet, with 5 minutes clock skew.
-              ValidateLifetime = true,
+              //ValidateLifetime = true,
               //RequireExpirationTime = true,
               //ValidateLifetime = true,
               //ClockSkew = new TimeSpan(0, 60, 0),

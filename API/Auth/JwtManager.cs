@@ -18,8 +18,8 @@ namespace API.Auth
             var payload = new Dictionary<string, object>
             {
                 {"sub", sub },
-                {"nbf",1476997029},
-                {"exp", ToUnixTime(DateTime.Now.Add(TimeSpan.FromDays(20))) },
+                //{"nbf",1476997029},
+                //{"exp", ToUnixTime(DateTime.Now.Add(TimeSpan.FromDays(20))) },
                 //{"iat",1476997029}
             };
 

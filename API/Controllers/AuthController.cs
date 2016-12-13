@@ -22,7 +22,10 @@ namespace API.Controllers
             {
                 await _localAuthManager.RegisterUser(newUsuario);
                 var token = _jwtManager.CreateJwt(newUsuario.email);
-                return StatusCode(200, new {newUser = newUsuario, jwt = token});
+
+                var userCredentials = new {newUsuario.email, token};
+
+                return StatusCode(200, userCredentials);
             }
             catch (Exception e)
             {
