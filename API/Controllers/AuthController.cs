@@ -23,7 +23,7 @@ namespace API.Controllers
                 await _localAuthManager.RegisterUser(newUsuario);
                 var token = _jwtManager.CreateJwt(newUsuario.email);
 
-                var userCredentials = new {newUsuario.email, token};
+                var userCredentials = new {newUsuario.email,newUsuario.displayName, token};
 
                 return StatusCode(200, userCredentials);
             }
