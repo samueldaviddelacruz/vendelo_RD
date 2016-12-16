@@ -15,7 +15,7 @@ namespace API.Controllers
 
       [HttpGet]
       //[Authorize(Policy="JwtRequired")]
-      [Authorize]
+      //[Authorize]
       public async Task<IEnumerable<Persona>> GetAll()
     {
 

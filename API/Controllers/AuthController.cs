@@ -40,8 +40,11 @@ namespace API.Controllers
             {
                 if (await _localAuthManager.IsValidUser(usuario.email, usuario.password))
                 {
-
-                    return StatusCode(200, new{jwt=_jwtManager.CreateJwt(usuario.email)});
+                    var user = await _localAuthManager.FindUser(usuario.email);
+                    var token = _jwtManager.CreateJwt(user.email);
+                    var userCredentials = new { user.email, user.displayName, token };
+                    
+                    return StatusCode(200, userCredentials);
                 }
             }
             catch (Exception e)

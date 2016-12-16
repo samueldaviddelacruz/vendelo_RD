@@ -28,7 +28,7 @@ namespace API.DAL
             }
         }
 
-        private async Task<Usuario> FindUser(string email)
+        public async Task<Usuario> FindUser(string email)
         {
             Console.WriteLine(email);
             var founduser = await _mydal.FindByExpression(user => user.email == email);

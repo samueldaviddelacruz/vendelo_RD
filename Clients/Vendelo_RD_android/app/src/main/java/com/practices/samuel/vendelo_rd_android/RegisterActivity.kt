@@ -12,57 +12,45 @@ import kotlinx.android.synthetic.main.register_activity.*
 
 class RegisterActivity : AppCompatActivity() {
 
-    val httpHandler = HttpHandler()
-    val gson = Gson()
 
-    fun StoreUserData(serverResponse: String?) {
-        val preferences = getSharedPreferences("UserData", 0)
-        val newUser = gson.fromJson(serverResponse, Usuario::class.java)
-        val editor = preferences.edit()
-        editor.putString("userEmail", newUser.email)
-        editor.putString("userName", newUser.displayName)
-        editor.putString("jwt", newUser.token)
-        editor.commit()
-    }
+    val authManager = AuthManager(this)
+
 
     fun Register(view: View) {
-        val newUser = getNewUsuario()
-        var userCredentialsJSON = gson.toJson(newUser)
 
-        httpHandler.PostHttpData("http://10.0.0.21:3000/api/Auth/LocalRegister", userCredentialsJSON).subscribe(fun(it) {
-            //httpTextView.text=it
-            if (!it.contentEquals("User already registered")) {
+        authManager.Register(editCorreo.text.toString(), editNombre.text.toString(), editPassword.text.toString(), onSuccess, onError)
 
-                StoreUserData(it)
-            }
-
-        }, fun(it) {
-                it.printStackTrace()
-            })
     }
 
-    private fun getNewUsuario(): Usuario {
-        var email = editCorreo.text.toString()
-        var displayName = editNombre.text.toString()
-        var password = editPassword.text.toString()
-        val newUser = Usuario(email, displayName, password)
-        return newUser
+    var onSuccess = fun(serverResponse: String) {
+        goToAdsActivity()
+    }
+    var onError = fun(serverResponse: String) {
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register_activity)
 
-        val jwt = getSharedPreferences("UserData", 0)?.getString("jwt", "")
-        if (!jwt.isNullOrEmpty()) {
+
+        if (authManager.userHasAccesToken()) {
             goToAdsActivity()
         }
 
     }
 
+
     fun goToAdsActivity() {
 
         val redirect = Intent(this, AdsDisplayActivity::class.java)
+
+        startActivity(redirect)
+    }
+
+    fun goToLoginActivity(view: View) {
+
+        val redirect = Intent(this, LoginActivity::class.java)
 
         startActivity(redirect)
     }

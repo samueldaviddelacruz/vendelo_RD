@@ -102,6 +102,24 @@
                 android:id="@+id/btnCrearCuenta"
                 android:onClick="Register" />
 
+
+            <TextView
+                android:text="¿Ya tienes una cuenta?"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/labelYaTienesCuenta"
+                android:textSize="18sp"
+                android:textStyle="normal|bold"
+                android:textAlignment="center" />
+
+            <Button
+                android:text="Inicia sesión"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnGoToLogin"
+                android:onClick="goToLoginActivity" />
+
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

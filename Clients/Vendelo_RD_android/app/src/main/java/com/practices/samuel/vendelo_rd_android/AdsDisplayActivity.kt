@@ -1,14 +1,16 @@
 package com.practices.samuel.vendelo_rd_android
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import kotlinx.android.synthetic.main.activity_ads_display.*
 import android.widget.ArrayAdapter
 import android.widget.Toast
 
 
 class AdsDisplayActivity : AppCompatActivity() {
-
+    val authManager = AuthManager(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ads_display)
@@ -21,12 +23,10 @@ class AdsDisplayActivity : AppCompatActivity() {
                 "List View Source Code",
                 "List View Array Adapter",
                 "Android Example List View")
-
         val adapter = ArrayAdapter(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, values)
 
         listViewAds.adapter = adapter
-
 
         listViewAds.setOnItemClickListener { parent, view, position, id ->
             // ListView Clicked item index
@@ -39,9 +39,20 @@ class AdsDisplayActivity : AppCompatActivity() {
                     "Position :$itemPosition  ListItem : ${listViewAds.getItemAtPosition(position)}", Toast.LENGTH_LONG)
                     .show()
 
-
         }
 
 
+        if (authManager.userHasAccesToken()) {
+
+            val user = authManager.getUserFromStorage()
+            textWelcome.text = "Bienvenido ${user.displayName}"
+        }
+
+    }
+
+    fun goToLogin(view: View) {
+        val redirect = Intent(this, LoginActivity::class.java)
+
+        startActivity(redirect)
     }
 }
