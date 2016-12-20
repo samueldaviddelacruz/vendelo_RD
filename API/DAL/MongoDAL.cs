@@ -9,9 +9,10 @@ namespace API.DAL
 {
     public class MongoDAL<T> where T : MongoEntity
     {
-        static readonly string constring = "mongodb://localhost:27017";
-        
-        static readonly string dbname = "test_vendelo";
+        //static readonly string constring = "mongodb://10.0.0.21:27017";
+        static readonly string constring = "mongodb://ingsamy:mega007@ds059519.mlab.com:59519/mongolabdb";
+
+        static readonly string dbname = "mongolabdb";
 
         private static MongoClient _client;
        
