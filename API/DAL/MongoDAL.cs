@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.GeoJsonObjectModel;
 
 namespace API.DAL
 {
@@ -53,10 +54,28 @@ namespace API.DAL
         }
 
         public async Task<T> FindByExpression(Expression<Func<T, bool>> filter){
+
             var collection = GetDb().GetCollection<T>(typeof(T).Name);
             var result = await collection.Find(filter).FirstOrDefaultAsync();
             return result;
+
         }
+
+        public async Task<List<T>> FindByProximity(double lng, double lat,  int distanceInMeters,Expression<Func<T, object>> locationField)
+        {
+           
+            var coordinates = new GeoJson2DGeographicCoordinates(lng, lat);
+            var point = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(coordinates);
+            var collection = GetDb().GetCollection<T>(typeof(T).Name);
+            var filter = Builders<T>.Filter.NearSphere(locationField, point, distanceInMeters);
+
+            var results = await collection.Find(filter).ToListAsync();
+
+            return results;
+
+        }
+
+
 
         public async Task<T> FindByObjectIdString(string id){
 
