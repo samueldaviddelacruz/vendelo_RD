@@ -14,7 +14,8 @@ namespace API.Models
         public string description { get; set; }
         public decimal price { get; set; }
         public IEnumerable<byte[]> pictures { get; set; }
-        public GeoJsonPoint<GeoJson2DGeographicCoordinates> location { get; set; }
+        //public GeoJsonPoint<GeoJson2DGeographicCoordinates> location { get; set; }
+        public Location location { get; set; }
         public Usuario postedBy { get; set; }
         public DateTime uploadDate { get; set; }
      
