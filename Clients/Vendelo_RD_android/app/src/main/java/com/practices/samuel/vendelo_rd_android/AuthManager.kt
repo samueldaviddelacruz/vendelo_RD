@@ -13,7 +13,7 @@ class AuthManager(private val context: ContextWrapper) {
 
     private val httpHandler = HttpHandler()
     private val gson = Gson()
-
+    private val serverUrl = BuildConfig.SERVER_URL
     private fun StoreUserData(serverResponse: String?) {
         val preferences = context.getSharedPreferences("UserData", 0)
         val newUser = gson.fromJson(serverResponse, Usuario::class.java)
@@ -31,8 +31,8 @@ class AuthManager(private val context: ContextWrapper) {
 
     fun Register(email: String, displayName: String, password: String, onSuccess: (String) -> Unit, onError: (String) -> Unit) {
         var userCredentialsJSON = getUserCredentialsJSON(displayName, email, password)
-
-        httpHandler.PostHttpData("http://10.0.0.12:3000/api/Auth/LocalRegister", userCredentialsJSON).subscribe({ serverResponse ->
+        val registerUrl ="${serverUrl}/api/Auth/LocalRegister"
+        httpHandler.PostHttpData(registerUrl, userCredentialsJSON).subscribe({ serverResponse ->
             if (!serverResponse.contains("User already registered")) {
 
                 StoreUserData(serverResponse)
@@ -59,7 +59,7 @@ class AuthManager(private val context: ContextWrapper) {
     fun Login(email: String, password: String, onSuccess: (String) -> Unit, onError: (String) -> Unit) {
 
         var userCredentialsJSON = getUserCredentialsJSON("", email, password)
-        httpHandler.PostHttpData("http://10.0.0.12:3000/api/Auth/LocalLogin", userCredentialsJSON).subscribe(
+        httpHandler.PostHttpData("${serverUrl}/api/Auth/LocalLogin", userCredentialsJSON).subscribe(
                 { serverResponse ->
                     if (serverResponse.contains("Invalid Username/password")) {
 

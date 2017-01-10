@@ -14,27 +14,10 @@ namespace API.Controllers
     public class AdsController : Controller
     {
         private MongoDAL<Ad> _mydal;
+        [HttpGet()]
         public async Task<IEnumerable<Ad>> GetAllAdds()
         {
-            //var ad = new Ad();
-            ////ad.Id = new ObjectId();
-          
-            //ad.categoryId = new ObjectId();
-            
-            //ad.title = "Mueble rojo";
-            //ad.description = "Mueble rojo en buenas condiciones";
-            //ad.price = 1500;
-            //ad.postedBy = new Usuario() {
-            //    email ="alphaelena@gmail.com",
-            //    phoneNumber="809-594-9550",
-            //    displayName="Samuel David"
-            //};
-            //ad.location = new Location(18.4894982, -69.8499001);
-            //ad.uploadDate = DateTime.Now;     
-            //var ads = new List<Ad>()
-            //{
-            //   ad
-            //};
+           
             _mydal = new MongoDAL<Ad>();
             var dbAds = await _mydal.GetAll();
 
@@ -54,11 +37,11 @@ namespace API.Controllers
             return foundAd;
         }
 
-        [HttpPost]
-        public async Task<IEnumerable<Ad>> GetAdsByProximity([FromBody]Location loc)
+        [HttpGet("{lng}|{lat}|{distanceInMeters}")]
+        public async Task<IEnumerable<Ad>> GetAdsByProximity(double lng,double lat,int distanceInMeters=3000)
         {
             _mydal = new MongoDAL<Ad>();
-            var founAds = await _mydal.FindByProximity(loc.getLongitude(),loc.getLatitude(), 5000,ad => ad.location );
+            var founAds = await _mydal.FindByProximity(lng, lat, distanceInMeters, ad => ad.location );
             return founAds;
         }
 
@@ -73,7 +56,7 @@ namespace API.Controllers
             {
                 email = "alphaelena@gmail.com",
                 phoneNumber = "809-594-9550",
-                displayName = "Samuel David"
+                displayName = "Samuel David-"
             };
             ad.uploadDate = DateTime.Now;
             await _mydal.Insert(ad);

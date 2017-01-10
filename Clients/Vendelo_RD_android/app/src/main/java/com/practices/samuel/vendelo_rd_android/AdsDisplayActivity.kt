@@ -7,10 +7,16 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_ads_display.*
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.practices.samuel.vendelo_rd_android.DAL.DAL
+import com.practices.samuel.vendelo_rd_android.Model.Ad
 
 
 class AdsDisplayActivity : AppCompatActivity() {
     val authManager = AuthManager(this)
+    private val gson = Gson()
+    var ads = emptyList<Ad>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ads_display)
@@ -45,8 +51,25 @@ class AdsDisplayActivity : AppCompatActivity() {
         if (authManager.userHasAccesToken()) {
 
             val user = authManager.getUserFromStorage()
+            val dal= DAL()
+
+            dal.GetAll(user.token,onAds,onError)
+
             textWelcome.text = "Bienvenido ${user.displayName}"
         }
+
+    }
+    var onAds =fun(adsJSONresponse:String){
+        val listType = object : TypeToken<List<Ad>>() {
+
+        }.type
+        ads = gson.fromJson(adsJSONresponse,listType)
+
+
+    }
+    var onError =fun(error:String){
+
+
 
     }
 
